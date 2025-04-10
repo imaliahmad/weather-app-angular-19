@@ -1,1 +1,100 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --primary-color: #1e3c72;
+    --secondary-color: #2a5298;
+    --accent-color: #ff6b6b;
+    --text-color: #343a40;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --gray-color: #6c757d;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-color);
+    background-color: var(--light-color);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+  }
+  
+  /* Utility Classes */
+  .text-primary { color: var(--primary-color); }
+  .text-secondary { color: var(--secondary-color); }
+  .text-accent { color: var(--accent-color); }
+  .text-light { color: var(--light-color); }
+  .text-dark { color: var(--dark-color); }
+  .text-gray { color: var(--gray-color); }
+  
+  .bg-primary { background-color: var(--primary-color); }
+  .bg-secondary { background-color: var(--secondary-color); }
+  .bg-accent { background-color: var(--accent-color); }
+  .bg-light { background-color: var(--light-color); }
+  .bg-dark { background-color: var(--dark-color); }
+  .bg-gray { background-color: var(--gray-color); }
+  
+  /* Card Styles */
+  .card {
+    transition: var(--transition);
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow);
+    }
+  }
+  
+  /* Button Styles */
+  .btn {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: var(--transition);
+    
+    &.btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      
+      &:hover {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+      }
+    }
+    
+    &.btn-accent {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      color: white;
+      
+      &:hover {
+        background-color: darken(#ff6b6b, 10%);
+        border-color: darken(#ff6b6b, 10%);
+      }
+    }
+  }
+  
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--gray-color);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--dark-color);
+  }

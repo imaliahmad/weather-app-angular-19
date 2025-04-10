@@ -8,5 +8,6 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'temp-weather-app';
+  title = 'Weather App';
+  currentYear = new Date().getFullYear();
 }

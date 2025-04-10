@@ -1,0 +1,31 @@
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .app-header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 1rem 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+  }
+  
+  .app-content {
+    flex: 1;
+    padding: 2rem 0;
+    background-color: #f8f9fa;
+  }
+  
+  .app-footer {
+    background-color: #343a40;
+    color: #f8f9fa;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+  }
