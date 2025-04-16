@@ -5,17 +5,23 @@ import { CurrentWeatherComponent } from '../current-weather/current-weather.comp
 import { HourlyForecastComponent } from '../hourly-forecast/hourly-forecast.component';
 import { DailyForecastComponent } from '../daily-forecast/daily-forecast.component';
 import { WeatherData } from '../../models/weather-data.model';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { WeatherService } from '../../services/weather.service';
 import { LocationService } from '../../services/location.service';
 import { UserLocation } from '../../models/user-location.model';
 
 @Component({
   selector: 'app-weather-dashboard',
-  // standalone: true,
-  imports: [NgIf, HourlyForecastComponent, DailyForecastComponent, LocationSelectorComponent, CurrentWeatherComponent],
+  standalone: true,
+  imports: [
+    CommonModule,
+    LocationSelectorComponent,
+    CurrentWeatherComponent,
+    HourlyForecastComponent,
+    DailyForecastComponent
+  ],
   templateUrl: './weather-dashboard.component.html',
-  styleUrl: './weather-dashboard.component.scss'
+  styleUrls: ['./weather-dashboard.component.scss']
 })
 export class WeatherDashboardComponent implements OnInit, OnDestroy {
   weatherData: WeatherData | null = null;
@@ -86,12 +92,14 @@ export class WeatherDashboardComponent implements OnInit, OnDestroy {
   }
   
   retryWeatherData(): void {
-    const currentLocation = this.locationService.selectedLocation$.getValue();
-    if (currentLocation) {
-      this.loadWeatherData(currentLocation);
-    } else {
-      this.detectUserLocation();
-    }
+    // Fix: Use take(1) to get the current value from the Observable
+    this.locationService.selectedLocation$.pipe(take(1)).subscribe(currentLocation => {
+      if (currentLocation) {
+        this.loadWeatherData(currentLocation);
+      } else {
+        this.detectUserLocation();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -99,5 +107,11 @@ export class WeatherDashboardComponent implements OnInit, OnDestroy {
       this.locationSubscription.unsubscribe();
     }
   }
-
 }
+
+
+
+
+
+
+

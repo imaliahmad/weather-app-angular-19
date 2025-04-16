@@ -1,0 +1,79 @@
+.current-weather-card {
+    .card {
+      border-radius: 15px;
+      overflow: hidden;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      }
+      
+      .card-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding-bottom: 1rem;
+      }
+    }
+    
+    .weather-main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      
+      .weather-icon {
+        img {
+          width: 120px;
+          height: 120px;
+        }
+      }
+      
+      .temperature {
+        margin: 0.5rem 0;
+        
+        .temp-value {
+          font-size: 3.5rem;
+          font-weight: 700;
+          line-height: 1;
+        }
+        
+        .temp-unit {
+          font-size: 1.5rem;
+          vertical-align: super;
+        }
+      }
+      
+      .description {
+        font-size: 1.2rem;
+        text-align: center;
+        font-weight: 500;
+      }
+    }
+    
+    .weather-details {
+      .detail-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.8rem;
+        
+        i {
+          margin-right: 1rem;
+          font-size: 1.2rem;
+          width: 20px;
+          text-align: center;
+        }
+        
+        span {
+          font-size: 1rem;
+        }
+      }
+    }
+  }

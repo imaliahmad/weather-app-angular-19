@@ -7,14 +7,17 @@ import { City } from '../../models/city.model';
 import { LocationService } from '../../services/location.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
+
 @Component({
   selector: 'app-location-selector',
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule],
+    ReactiveFormsModule
+  ],
   templateUrl: './location-selector.component.html',
-  styleUrl: './location-selector.component.scss'
+  styleUrls: ['./location-selector.component.scss']
 })
 export class LocationSelectorComponent implements OnInit {
   @Output() locationSelected = new EventEmitter<UserLocation>();

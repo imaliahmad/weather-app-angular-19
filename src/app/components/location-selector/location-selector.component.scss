@@ -1,0 +1,64 @@
+.location-selector-card {
+    .card {
+      border-radius: 10px;
+      border: none;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+      }
+      
+      .card-title {
+        font-weight: 600;
+        color: #1e3c72;
+        font-size: 1.5rem;
+      }
+    }
+    
+    .form-label {
+      font-weight: 500;
+    }
+    
+    .form-select, .form-control {
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      transition: all 0.2s;
+      
+      &:focus {
+        border-color: #1e3c72;
+        box-shadow: 0 0 0 0.25rem rgba(30, 60, 114, 0.25);
+      }
+    }
+    
+    .city-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      max-height: 200px;
+      overflow-y: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 5px;
+      
+      .list-group-item {
+        cursor: pointer;
+        
+        &:first-child {
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+        }
+        
+        &:last-child {
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
+        }
+        
+        &:hover {
+          background-color: rgba(30, 60, 114, 0.05);
+        }
+      }
+    }
+  }

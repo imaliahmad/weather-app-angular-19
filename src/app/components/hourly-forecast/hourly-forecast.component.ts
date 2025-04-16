@@ -1,13 +1,15 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { HourlyForecast } from '../../models/hourly-forecast.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-hourly-forecast',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './hourly-forecast.component.html',
-  styleUrl: './hourly-forecast.component.scss'
+  styleUrls: ['./hourly-forecast.component.scss']
 })
-export class HourlyForecastComponent implements AfterViewInit{
+export class HourlyForecastComponent implements AfterViewInit {
   @Input() hourlyForecast!: HourlyForecast[];
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   

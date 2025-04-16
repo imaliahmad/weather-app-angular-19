@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { Country } from "../models/country.model";
-import { BehaviorSubject, catchError, Observable, of } from "rxjs";
+import { BehaviorSubject, catchError, map, Observable, of, throwError } from "rxjs";
 import { UserLocation } from "../models/user-location.model";
 import { HttpClient } from "@angular/common/http";
 import { City } from "../models/city.model";
@@ -11,9 +11,10 @@ import { City } from "../models/city.model";
   providedIn: 'root'
 })
 export class LocationService {
-  private readonly API_URL = 'https://api.openweathermap.org/geo/1.0';
+  private readonly GEO_API_URL = 'https://api.openweathermap.org/geo/1.0';
   private readonly API_KEY = environment.weatherApiKey;
   
+  // Predefined list of common countries
   private countries: Country[] = [
     { code: 'US', name: 'United States' },
     { code: 'GB', name: 'United Kingdom' },
@@ -39,16 +40,25 @@ export class LocationService {
   }
 
   searchCities(query: string, countryCode: string): Observable<City[]> {
-    return this.http.get<any[]>(`${this.API_URL}/direct?q=${query}&limit=5&appid=${this.API_KEY}`).pipe(
+    if (!query || query.length < 2) {
+      return of([]);
+    }
+    
+    return this.http.get<any[]>(`${this.GEO_API_URL}/direct?q=${query}&limit=5&appid=${this.API_KEY}`).pipe(
+      map(results => results
+        .filter(result => result.country === countryCode)
+        .map(city => ({
+          id: `${city.lat}-${city.lon}`,
+          name: city.name,
+          countryCode: city.country,
+          lat: city.lat,
+          lon: city.lon
+        }))
+      ),
       catchError(error => {
         console.error('Error searching cities:', error);
         return of([]);
       })
-    ).pipe(
-      // Map to our City model
-      catchError(() => of([])),
-      // Filter by country if provided
-      catchError(() => of([]))
     );
   }
 
@@ -69,7 +79,12 @@ export class LocationService {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
           
-          this.http.get<any[]>(`${this.API_URL}/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${this.API_KEY}`).subscribe({
+          this.http.get<any[]>(`${this.GEO_API_URL}/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${this.API_KEY}`).pipe(
+            catchError(error => {
+              console.error('Error in reverse geocoding:', error);
+              return throwError(() => new Error('Failed to get location information. Please try entering your location manually.'));
+            })
+          ).subscribe({
             next: (results) => {
               if (results && results.length > 0) {
                 const result = results[0];
@@ -102,15 +117,15 @@ export class LocationService {
               observer.complete();
             },
             error: (err) => {
-              console.error('Error in reverse geocoding:', err);
               observer.error(err);
             }
           });
         },
         error => {
           console.error('Error getting user position:', error);
-          observer.error(error);
-        }
+          observer.error(new Error('Unable to determine your location. Please check your browser permissions.'));
+        },
+        { timeout: 10000, enableHighAccuracy: false }
       );
     });
   }
@@ -132,6 +147,8 @@ export class LocationService {
       }
     } catch (e) {
       console.error('Failed to load location from localStorage:', e);
+      // If there's an error, clear the corrupted data
+      localStorage.removeItem('weatherApp_location');
     }
   }
 }

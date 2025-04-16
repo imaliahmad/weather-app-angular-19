@@ -2,32 +2,32 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap } from 'rxjs/operators';
 import { WeatherData } from '../models/weather-data.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WeatherService {
+ 
   private readonly API_URL = 'https://api.openweathermap.org/data/2.5';
   private readonly API_KEY = environment.weatherApiKey;
 
   constructor(private http: HttpClient) {}
 
-  getWeatherByCoordinates(lat: number, lon: number) {
-    return this.http.get<any>(
-      `${this.API_URL}/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&appid=${this.API_KEY}&units=metric`
-    ).pipe(
-      map(response => {
-        // Get city name from a separate API call
-        return this.http.get<any>(`${this.API_URL}/weather?lat=${lat}&lon=${lon}&appid=${this.API_KEY}`).pipe(
-          map(cityData => {
-            return this.transformWeatherData(
-              response, 
-              cityData.name, 
-              cityData.sys.country
-            );
-          })
+  getWeatherByCoordinates(lat: number, lon: number): Observable<WeatherData> {
+    // First, get basic city data
+    return this.http.get<any>(`${this.API_URL}/weather?lat=${lat}&lon=${lon}&appid=${this.API_KEY}`).pipe(
+      switchMap(cityData => {
+        // Then, use the coordinates to get detailed weather data
+        return this.http.get<any>(
+          `${this.API_URL}/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&appid=${this.API_KEY}&units=metric`
+        ).pipe(
+          map(response => this.transformWeatherData(
+            response, 
+            cityData.name, 
+            cityData.sys.country
+          ))
         );
       }),
       catchError(error => {
@@ -37,29 +37,27 @@ export class WeatherService {
     );
   }
 
-  getWeatherByCity(cityName: string, countryCode: string) {
+  getWeatherByCity(cityName: string, countryCode: string): Observable<WeatherData> {
     return this.http.get<any>(
       `${this.API_URL}/weather?q=${cityName},${countryCode}&appid=${this.API_KEY}&units=metric`
     ).pipe(
-      map(cityData => {
+      switchMap(cityData => {
         const lat = cityData.coord.lat;
         const lon = cityData.coord.lon;
         
         return this.http.get<any>(
           `${this.API_URL}/onecall?lat=${lat}&lon=${lon}&exclude=minutely,alerts&appid=${this.API_KEY}&units=metric`
         ).pipe(
-          map(response => {
-            return this.transformWeatherData(
-              response, 
-              cityData.name, 
-              cityData.sys.country
-            );
-          })
+          map(response => this.transformWeatherData(
+            response, 
+            cityData.name, 
+            cityData.sys.country
+          ))
         );
       }),
       catchError(error => {
         console.error('Error fetching weather data:', error);
-        return throwError(() => new Error('Failed to load weather data. Please try again later.'));
+        return throwError(() => new Error('Failed to load weather data for this location. Please try again or select a different city.'));
       })
     );
   }
@@ -111,7 +109,5 @@ export class WeatherService {
       }
     };
   }
-
-  
-
 }
+

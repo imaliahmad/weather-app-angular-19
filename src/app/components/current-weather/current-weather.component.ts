@@ -1,11 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { CurrentWeather } from '../../models/current-weather.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-current-weather',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './current-weather.component.html',
-  styleUrl: './current-weather.component.scss'
+  styleUrls: ['./current-weather.component.scss']
 })
 export class CurrentWeatherComponent {
   @Input() currentWeather!: CurrentWeather;

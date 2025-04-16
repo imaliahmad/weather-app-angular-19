@@ -1,11 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { DailyForecast } from '../../models/daily-forecast.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-daily-forecast',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './daily-forecast.component.html',
-  styleUrl: './daily-forecast.component.scss'
+  styleUrls: ['./daily-forecast.component.scss']
 })
 export class DailyForecastComponent {
   @Input() dailyForecast!: DailyForecast[];
